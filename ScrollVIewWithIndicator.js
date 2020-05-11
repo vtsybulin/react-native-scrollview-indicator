@@ -39,9 +39,16 @@ export default class ScrollViewWithIndicator extends Component {
       <View style={styles.container}>
         <ScrollView style={{ width: '100%' }} 
           onScroll={(val) => {
+            const { onScroll } = this.props;
             this.indicatorHeight = (val.nativeEvent.layoutMeasurement.height / val.nativeEvent.contentSize.height) * val.nativeEvent.layoutMeasurement.height
             this.setState({ position: ((val.nativeEvent.layoutMeasurement.height / val.nativeEvent.contentSize.height) * (val.nativeEvent.contentOffset.y)) })
-            this.indicatorPos = ((val.nativeEvent.layoutMeasurement.height / val.nativeEvent.contentSize.height) * (val.nativeEvent.contentOffset.y))
+            this.indicatorPos = ((val.nativeEvent.layoutMeasurement.height / val.nativeEvent.contentSize.height) * (val.nativeEvent.contentOffset.y));
+            /**
+             * Propagating onScroll event upwards in case onScroll prop is provided
+             */
+            if (onScroll && typeof onScroll === 'function') {
+              onScroll(val);
+            }
           }}
           {...this.props}
         >
